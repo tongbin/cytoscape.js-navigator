@@ -132,6 +132,7 @@
     , dblClickDelay: 200 // milliseconds
     , removeCustomContainer: true // destroy the container specified by user on plugin destroy
     , rerenderDelay: 500 // ms to throttle rerender updates to the panzoom for performance
+    , maxZoom: 1 // the max zoom, don't make the image too big
   };
 
   var debounce = (function(){
@@ -418,6 +419,10 @@
     return bb
   }
 
+  , getPixRatio() {
+    return window.devicePixelRatio;
+  }
+
   , _init: function ( cy, options ) {
       this.$element = $( cy.container() )
       this.options = Object.assign({}, defaults, options)
@@ -520,7 +525,7 @@
       // Update bounding box cache
       this.boundingBox = this.bb()
 
-      this.thumbnailZoom = Math.min(this.panelHeight / this.boundingBox.h, this.panelWidth / this.boundingBox.w)
+      this.thumbnailZoom = Math.min(this.panelHeight / this.boundingBox.h, this.panelWidth / this.boundingBox.w, this.options.maxZoom)
 
       // Used on thumbnail generation
       this.thumbnailPan = {
@@ -909,7 +914,7 @@
       var w = that.panelWidth;
       var h = that.panelHeight;
       var bb = that.boundingBox;
-      var zoom = Math.min( w/bb.w, h/bb.h );
+      var zoom = Math.min( w/bb.w, h/bb.h, that.options.maxZoom );
 
       var pxRatio = 1;
 
@@ -920,7 +925,9 @@
 
       var png = that.cy.png({
         full: true,
-        scale: zoom
+        scale: zoom,
+        maxHeight: bb.h * zoom,
+        maxWidth: bb.w * zoom
       });
 
       if( png.indexOf('image/png') < 0 ){

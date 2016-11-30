@@ -42,6 +42,9 @@
 			document.addEventListener('DOMContentLoaded', function(){
 
 				var cy = window.cy = cytoscape({
+
+					maxZoom: 3,
+					minZoom: 0.2,
 					container: document.getElementById('cy'),
 
 					style: [
