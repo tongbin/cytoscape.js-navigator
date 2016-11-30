@@ -927,7 +927,33 @@
         full: true,
         scale: zoom,
         maxHeight: bb.h * zoom,
-        maxWidth: bb.w * zoom
+        maxWidth: bb.w * zoom,
+        preProcess: function(zsortedEles) {
+          return zsortedEles.filter(function(e) {
+            return e.isEdge();
+          }).map(function(e) {
+            // lose all the details
+            var edge = e.clone();
+            edge._private.rscratch = Object.assign(e._private.rscratch);
+            edge[0]._private.source = e._private.source.clone();
+            edge[0]._private.target = e._private.target.clone();
+            edge[0]._private.style.width = 1;
+            // we still need line color
+            edge[0]._private.style['line-color'] = Object.assign(e[0]._private.style['line-color']);
+            e.width();
+            return edge;
+          }).concat(zsortedEles.filter(function(n) {
+            return n.isNode();
+          }).map(function(n) {
+            // lose all the details
+            var node = n.clone();
+            node._private.rscratch = Object.assign(n._private.rscratch);
+            node._private.position = Object.assign(n._private.position);
+            // we still need background color
+            node[0]._private.style['background-color'] = Object.assign(n[0]._private.style['background-color']);
+            return node;
+          }));
+        }
       });
 
       if( png.indexOf('image/png') < 0 ){
