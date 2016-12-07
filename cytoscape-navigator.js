@@ -671,6 +671,9 @@
       // handle events and stop their propagation
       var overlayListener;
       this.$overlay.on(eventsLocal.join(' '), overlayListener = function (ev) {
+        if (that.disabled) {
+          return;
+        }
         var position = {
           offsetX: ev.offsetX,
           offsetY: ev.offsetY
@@ -703,6 +706,9 @@
       // Hook global events
       var globalListener;
       $(window).on(eventsGlobal.join(' '), globalListener = function (ev) {
+        if (that.disabled) {
+          return;
+        }
         var position = {
           offsetX: ev.offsetX,
           offsetY: ev.offsetY
@@ -997,6 +1003,12 @@
         level: this.cy.zoom() * zoomRate
       , renderedPosition: zoomCenter
       })
+    }
+  , disable: function () {
+      this.disabled = true;
+    }
+  , disable: function () {
+      this.disabled = false;
     }
   }
 
