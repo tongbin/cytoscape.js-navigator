@@ -1007,7 +1007,7 @@
   , disable: function () {
       this.disabled = true;
     }
-  , disable: function () {
+  , enable: function () {
       this.disabled = false;
     }
   }
