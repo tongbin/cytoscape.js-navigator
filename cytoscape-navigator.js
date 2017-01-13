@@ -419,7 +419,7 @@
     return bb
   }
 
-  , getPixRatio() {
+  , getPixRatio: function() {
     return window.devicePixelRatio;
   }
 
